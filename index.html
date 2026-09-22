@@ -1,166 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JARVIS v1</title>
-
-<style>
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    background: #050b12;
-    color: #00d9ff;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.jarvis {
-    width: 95%;
-    max-width: 700px;
-    padding: 25px;
-    text-align: center;
-}
-
-h1 {
-    font-size: 48px;
-    letter-spacing: 8px;
-    margin-bottom: 5px;
-    text-shadow: 0 0 20px #00d9ff;
-}
-
-.status {
-    color: #7ff6ff;
-    margin-bottom: 30px;
-}
-
-.arc {
-    width: 180px;
-    height: 180px;
-    margin: 20px auto 35px;
-    border: 5px solid #00d9ff;
-    border-radius: 50%;
-    box-shadow:
-        0 0 15px #00d9ff,
-        0 0 40px #008cff,
-        inset 0 0 25px #00d9ff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: pulse 2s infinite;
-}
-
-.arc-inner {
-    width: 90px;
-    height: 90px;
-    border: 3px solid #ffffff;
-    border-radius: 50%;
-    box-shadow: 0 0 20px #00d9ff;
-}
-
-@keyframes pulse {
-    50% {
-        transform: scale(1.05);
-        opacity: .8;
-    }
-}
-
-.chat {
-    background: rgba(0, 40, 65, .55);
-    border: 1px solid #00d9ff;
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: 0 0 20px rgba(0,217,255,.2);
-}
-
-#output {
-    min-height: 100px;
-    text-align: left;
-    padding: 10px;
-    color: white;
-    line-height: 1.5;
-}
-
-.row {
-    display: flex;
-    gap: 10px;
-}
-
-input {
-    flex: 1;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #00d9ff;
-    background: #071521;
-    color: white;
-    outline: none;
-    font-size: 16px;
-}
-
-button {
-    padding: 15px 20px;
-    border: none;
-    border-radius: 10px;
-    background: #00aeea;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #00d9ff;
-}
-
-.mic {
-    margin-top: 15px;
-    width: 100%;
-}
-</style>
-</head>
-
-<body>
-
-<div class="jarvis">
-
-    <h1>JARVIS</h1>
-    <div class="status">SYSTEM ONLINE • V1.0</div>
-
-    <div class="arc">
-        <div class="arc-inner"></div>
-    </div>
-
-    <div class="chat">
-
-        <div id="output">
-            <b>JARVIS:</b> Good evening. Systems are online.
-        </div>
-
-        <div class="row">
-            <input id="question"
-                   placeholder="Ask JARVIS anything..."
-                   onkeydown="if(event.key==='Enter') askJarvis()">
-
-            <button onclick="askJarvis()">SEND</button>
-        </div>
-
-        <button class="mic" onclick="speakJarvis()">
-            🎙️ TALK TO JARVIS
-        </button>
-
-    </div>
-
-</div>
-
-<script>
-
-function askJarvis() {
-
+async function askJarvis() {
     const input = document.getElementById("question");
     const output = document.getElementById("output");
 
@@ -170,31 +8,32 @@ function askJarvis() {
 
     output.innerHTML =
         "<b>YOU:</b> " + question +
-        "<br><br><b>JARVIS:</b> output.innerHTML = "<b>YOU:</b> " + question + "<br><br><b>JARVIS:</b> Thinking...";
-        
+        "<br><br><b>JARVIS:</b> Thinking...";
 
     input.value = "";
-}
 
-function speakJarvis() {
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message: question })
+        });
 
-    if (!("speechSynthesis" in window)) {
-        alert("Voice isn't supported by this browser.");
-        return;
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Request failed");
+        }
+
+        output.innerHTML =
+            "<b>YOU:</b> " + question +
+            "<br><br><b>JARVIS:</b> " + data.reply;
+
+    } catch (error) {
+        output.innerHTML =
+            "<b>YOU:</b> " + question +
+            "<br><br><b>JARVIS:</b> Sorry, I couldn't connect to my AI brain.";
     }
-
-    const message =
-        "Good evening. I am JARVIS. Your systems are online.";
-
-    const speech = new SpeechSynthesisUtterance(message);
-
-    speech.rate = 0.9;
-    speech.pitch = 0.8;
-
-    speechSynthesis.speak(speech);
 }
-
-</script>
-
-</body>
-</html>
