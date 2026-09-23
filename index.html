@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TECH DASHBOARD</title>
+<title>TECH COMMAND</title>
 
 <style>
 * {
@@ -13,82 +13,111 @@
 body {
     margin: 0;
     min-height: 100vh;
+    padding: 18px;
     background:
-        radial-gradient(circle at top, #08233a 0%, #03070d 45%, #010308 100%);
+        linear-gradient(rgba(0,217,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,217,255,.035) 1px, transparent 1px),
+        radial-gradient(circle at 50% 0%, #0a2940, #02060b 55%);
+    background-size: 35px 35px, 35px 35px, 100% 100%;
     color: #00d9ff;
     font-family: Arial, sans-serif;
-    padding: 20px;
 }
 
 .dashboard {
-    max-width: 1000px;
+    width: 100%;
+    max-width: 1400px;
     margin: auto;
 }
 
+/* HEADER */
+
 header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 24px;
+    margin-bottom: 15px;
     border: 1px solid #00d9ff;
-    border-radius: 20px;
-    padding: 25px;
-    margin-bottom: 18px;
-    background: rgba(5,15,25,.9);
+    border-radius: 18px;
+    background: rgba(4,14,24,.94);
     box-shadow:
-        0 0 25px rgba(0,217,255,.2),
+        0 0 25px rgba(0,217,255,.15),
         inset 0 0 25px rgba(0,217,255,.04);
 }
 
 h1 {
     margin: 0;
-    letter-spacing: 6px;
     font-size: 34px;
+    letter-spacing: 6px;
 }
 
 .status {
-    margin-top: 10px;
+    margin-top: 8px;
     color: #55ff99;
     font-weight: bold;
+    animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+    50% {
+        opacity: .45;
+    }
 }
 
 .clock {
-    font-size: 30px;
-    margin-top: 18px;
     color: white;
+    font-size: 34px;
     font-weight: bold;
+    text-align: right;
 }
 
 #date {
-    margin-top: 5px;
-    color: #00d9ff;
+    color: #7ff3ff;
+    margin-top: 4px;
+    text-align: right;
 }
+
+/* MAIN GRID */
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
 }
 
 .card {
-    background: rgba(5,15,25,.9);
+    min-width: 0;
+    padding: 18px;
     border: 1px solid #164653;
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 0 18px rgba(0,217,255,.08);
+    border-radius: 17px;
+    background: rgba(5,15,25,.93);
+    box-shadow: 0 0 18px rgba(0,217,255,.07);
 }
 
 .card h2 {
-    margin-top: 0;
-    font-size: 17px;
+    margin: 0 0 15px;
     color: #7ff3ff;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+/* PERFORMANCE */
+
+.performance {
+    grid-column: span 2;
 }
 
 .gauges {
     display: flex;
     justify-content: space-around;
-    gap: 15px;
+    gap: 20px;
 }
 
 .gauge {
-    width: 150px;
-    height: 150px;
+    width: 145px;
+    height: 145px;
+    flex: 0 0 145px;
     border-radius: 50%;
     background: conic-gradient(
         #00d9ff 0deg,
@@ -96,9 +125,8 @@ h1 {
         #10222d 180deg,
         #10222d 360deg
     );
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    place-items: center;
     position: relative;
     box-shadow: 0 0 20px rgba(0,217,255,.2);
 }
@@ -106,70 +134,168 @@ h1 {
 .gauge::before {
     content: "";
     position: absolute;
-    width: 112px;
-    height: 112px;
+    width: 108px;
+    height: 108px;
     border-radius: 50%;
     background: #07111b;
 }
 
-.gauge-content {
+.gaugeContent {
     position: relative;
-    text-align: center;
     z-index: 2;
+    text-align: center;
 }
 
-.gauge-value {
-    font-size: 28px;
+.gaugeValue {
+    color: white;
+    font-size: 27px;
     font-weight: bold;
+}
+
+.gaugeLabel {
+    margin-top: 5px;
+    color: #7ff3ff;
+    font-size: 11px;
+}
+
+/* SMALL VALUES */
+
+.bigValue {
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.green {
+    color: #55ff99;
+}
+
+.white {
     color: white;
 }
 
-.gauge-label {
-    font-size: 12px;
-    color: #7ff3ff;
-    margin-top: 5px;
+/* BARS */
+
+.bar {
+    height: 10px;
+    margin-top: 13px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #101c26;
 }
 
-.online {
-    color: #55ff99;
-    font-size: 25px;
-    font-weight: bold;
+.fill {
+    height: 100%;
+    width: 50%;
+    background: #00d9ff;
+    box-shadow: 0 0 10px #00d9ff;
+    transition: width .5s;
+}
+
+/* GRAPH */
+
+.graphCard {
+    grid-column: span 2;
 }
 
 .graph {
-    height: 130px;
+    height: 135px;
     display: flex;
     align-items: end;
     gap: 5px;
-    margin-top: 15px;
 }
 
 .graph span {
     flex: 1;
+    min-width: 4px;
+    border-radius: 4px 4px 0 0;
     background: #00d9ff;
-    min-height: 8px;
-    border-radius: 5px 5px 0 0;
     box-shadow: 0 0 8px rgba(0,217,255,.4);
     transition: height .5s;
 }
 
+/* INFO */
+
 .info {
     color: white;
     line-height: 1.8;
+    font-size: 14px;
 }
 
-@media(max-width:650px) {
+.label {
+    color: #7ff3ff;
+}
+
+/* TEMPERATURE */
+
+.temp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tempNumber {
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+/* BATTERY */
+
+.batteryIcon {
+    width: 100%;
+    height: 30px;
+    border: 2px solid #00d9ff;
+    border-radius: 7px;
+    padding: 3px;
+}
+
+.batteryFill {
+    height: 100%;
+    width: 80%;
+    border-radius: 3px;
+    background: #55ff99;
+    box-shadow: 0 0 10px #55ff99;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .performance,
+    .graphCard {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 650px) {
+    body {
+        padding: 10px;
+    }
+
+    header {
+        grid-template-columns: 1fr;
+    }
+
+    .clock,
+    #date {
+        text-align: left;
+    }
+
     .grid {
         grid-template-columns: 1fr;
     }
 
-    .gauges {
-        flex-direction: column;
-        align-items: center;
+    .performance,
+    .graphCard {
+        grid-column: span 1;
     }
 
-    h1 {
-        font-size: 27px;
+    .gauges {
+        flex-wrap: wrap;
     }
 }
 </style>
@@ -180,73 +306,145 @@ h1 {
 <div class="dashboard">
 
 <header>
-    <h1>TECH DASHBOARD</h1>
-    <div class="status">● SYSTEM ONLINE</div>
-    <div class="clock" id="clock">00:00:00</div>
-    <div id="date"></div>
+    <div>
+        <h1>TECH COMMAND</h1>
+        <div class="status">● SYSTEM ONLINE</div>
+    </div>
+
+    <div>
+        <div class="clock" id="clock">00:00:00</div>
+        <div id="date"></div>
+    </div>
 </header>
 
 <div class="grid">
 
-<div class="card">
+<!-- CPU + RAM -->
+
+<div class="card performance">
     <h2>SYSTEM PERFORMANCE</h2>
 
     <div class="gauges">
 
         <div class="gauge" id="cpuGauge">
-            <div class="gauge-content">
-                <div class="gauge-value" id="cpu">--%</div>
-                <div class="gauge-label">CPU</div>
+            <div class="gaugeContent">
+                <div class="gaugeValue" id="cpu">--%</div>
+                <div class="gaugeLabel">CPU</div>
             </div>
         </div>
 
         <div class="gauge" id="ramGauge">
-            <div class="gauge-content">
-                <div class="gauge-value" id="ram">--%</div>
-                <div class="gauge-label">RAM</div>
+            <div class="gaugeContent">
+                <div class="gaugeValue" id="ram">--%</div>
+                <div class="gaugeLabel">RAM</div>
             </div>
         </div>
 
     </div>
 </div>
 
+<!-- INTERNET -->
+
+<div class="card">
+    <h2>NETWORK</h2>
+
+    <div class="bigValue green" id="internet">
+        CHECKING
+    </div>
+
+    <p class="info">
+        Connection: <span class="label">ACTIVE</span>
+    </p>
+</div>
+
+<!-- BATTERY -->
+
 <div class="card">
     <h2>BATTERY</h2>
-    <div class="gauge" id="batteryGauge">
-        <div class="gauge-content">
-            <div class="gauge-value" id="battery">--%</div>
-            <div class="gauge-label">POWER</div>
-        </div>
+
+    <div class="bigValue" id="battery">--%</div>
+
+    <div class="batteryIcon">
+        <div class="batteryFill" id="batteryFill"></div>
     </div>
+
+    <p class="info" id="charging">
+        Checking power...
+    </p>
 </div>
 
-<div class="card">
-    <h2>INTERNET</h2>
-    <div class="online" id="internet">CHECKING...</div>
-    <p class="info">Connection status detected by your device.</p>
-</div>
+<!-- TEMPERATURE -->
 
 <div class="card">
+    <h2>TEMPERATURE</h2>
+
+    <div class="temp">
+        <div class="tempNumber" id="temperature">--°C</div>
+        <div class="label">SYSTEM</div>
+    </div>
+
+    <p class="info">
+        Live dashboard estimate
+    </p>
+</div>
+
+<!-- STORAGE -->
+
+<div class="card">
+    <h2>STORAGE</h2>
+
+    <div class="bigValue" id="storage">--%</div>
+
+    <div class="bar">
+        <div class="fill" id="storageBar"></div>
+    </div>
+
+    <p class="info">Device storage</p>
+</div>
+
+<!-- VOLUME -->
+
+<div class="card">
+    <h2>VOLUME</h2>
+
+    <div class="bigValue" id="volume">--%</div>
+
+    <div class="bar">
+        <div class="fill" id="volumeBar"></div>
+    </div>
+
+    <p class="info">Dashboard audio level</p>
+</div>
+
+<!-- GRAPH -->
+
+<div class="card graphCard">
     <h2>SYSTEM ACTIVITY</h2>
     <div class="graph" id="graph"></div>
 </div>
 
+<!-- DEVICE -->
+
 <div class="card">
-    <h2>DEVICE</h2>
+    <h2>DEVICE INFORMATION</h2>
+
     <div class="info">
-        <b>STATUS:</b> ONLINE<br>
-        <b>MODE:</b> DASHBOARD<br>
-        <b>SYSTEM:</b> ACTIVE
+        <b class="label">STATUS:</b> ONLINE<br>
+        <b class="label">MODE:</b> TECH COMMAND<br>
+        <b class="label">BROWSER:</b> <span id="browser">Detecting...</span><br>
+        <b class="label">SCREEN:</b> <span id="screenSize">Detecting...</span>
     </div>
 </div>
 
 </div>
-
 </div>
 
 <script>
 
+/* CLOCK */
+
 function updateClock() {
+
     const now = new Date();
 
     document.getElementById("clock").textContent =
@@ -261,7 +459,10 @@ function updateClock() {
         });
 }
 
+/* GAUGES */
+
 function setGauge(id, value) {
+
     const degrees = value * 3.6;
 
     document.getElementById(id).style.background =
@@ -273,10 +474,15 @@ function setGauge(id, value) {
         )`;
 }
 
-function randomSystemData() {
+/* CPU + RAM */
 
-    const cpu = Math.floor(Math.random() * 70) + 10;
-    const ram = Math.floor(Math.random() * 60) + 25;
+function updatePerformance() {
+
+    const cpu =
+        Math.floor(Math.random() * 70) + 10;
+
+    const ram =
+        Math.floor(Math.random() * 60) + 25;
 
     document.getElementById("cpu").textContent =
         cpu + "%";
@@ -288,38 +494,98 @@ function randomSystemData() {
     setGauge("ramGauge", ram);
 }
 
+/* INTERNET */
+
 function updateInternet() {
 
+    const online = navigator.onLine;
+
     document.getElementById("internet").textContent =
-        navigator.onLine ? "ONLINE" : "OFFLINE";
+        online ? "ONLINE" : "OFFLINE";
 }
+
+/* BATTERY */
 
 async function updateBattery() {
 
     if (!navigator.getBattery) {
-        document.getElementById("battery").textContent = "N/A";
+        document.getElementById("battery").textContent =
+            "N/A";
+        document.getElementById("charging").textContent =
+            "Battery information unavailable";
         return;
     }
 
-    const battery = await navigator.getBattery();
+    const battery =
+        await navigator.getBattery();
 
-    const level = Math.round(battery.level * 100);
+    const level =
+        Math.round(battery.level * 100);
 
     document.getElementById("battery").textContent =
         level + "%";
 
-    setGauge("batteryGauge", level);
+    document.getElementById("batteryFill").style.width =
+        level + "%";
+
+    document.getElementById("charging").textContent =
+        battery.charging
+        ? "⚡ Charging"
+        : "Running on battery";
 }
+
+/* TEMPERATURE */
+
+function updateTemperature() {
+
+    const temperature =
+        Math.floor(Math.random() * 8) + 30;
+
+    document.getElementById("temperature").textContent =
+        temperature + "°C";
+}
+
+/* STORAGE */
+
+function updateStorage() {
+
+    const storage =
+        Math.floor(Math.random() * 40) + 35;
+
+    document.getElementById("storage").textContent =
+        storage + "%";
+
+    document.getElementById("storageBar").style.width =
+        storage + "%";
+}
+
+/* VOLUME */
+
+function updateVolume() {
+
+    const volume =
+        Math.floor(Math.random() * 50) + 30;
+
+    document.getElementById("volume").textContent =
+        volume + "%";
+
+    document.getElementById("volumeBar").style.width =
+        volume + "%";
+}
+
+/* GRAPH */
 
 function createGraph() {
 
-    const graph = document.getElementById("graph");
+    const graph =
+        document.getElementById("graph");
 
     graph.innerHTML = "";
 
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < 28; i++) {
 
-        const bar = document.createElement("span");
+        const bar =
+            document.createElement("span");
 
         bar.style.height =
             (Math.floor(Math.random() * 90) + 10) + "%";
@@ -328,16 +594,39 @@ function createGraph() {
     }
 }
 
+/* DEVICE INFO */
+
+function updateDeviceInfo() {
+
+    document.getElementById("screenSize").textContent =
+        window.innerWidth + " × " + window.innerHeight;
+
+    document.getElementById("browser").textContent =
+        navigator.userAgent.includes("Chrome")
+        ? "Chrome"
+        : "Browser";
+}
+
+/* START */
+
 updateClock();
-randomSystemData();
+updatePerformance();
 updateInternet();
 updateBattery();
+updateTemperature();
+updateStorage();
+updateVolume();
 createGraph();
+updateDeviceInfo();
 
 setInterval(updateClock, 1000);
-setInterval(randomSystemData, 2000);
-setInterval(createGraph, 1500);
+setInterval(updatePerformance, 2000);
 setInterval(updateInternet, 2000);
+setInterval(updateTemperature, 3000);
+setInterval(updateStorage, 4000);
+setInterval(updateVolume, 2000);
+setInterval(createGraph, 1500);
+setInterval(updateDeviceInfo, 2000);
 
 window.addEventListener("online", updateInternet);
 window.addEventListener("offline", updateInternet);
