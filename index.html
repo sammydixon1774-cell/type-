@@ -1,213 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TECH DASHBOARD</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: #05080d;
-            color: #00d9ff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #03070d;
+    color: #00d9ff;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
 
-        .jarvis {
-            width: 100%;
-            max-width: 700px;
-            border: 1px solid #00d9ff;
-            border-radius: 18px;
-            padding: 25px;
-            background: #0a1018;
-            box-shadow: 0 0 25px rgba(0, 217, 255, 0.2);
-        }
+.dashboard {
+    max-width: 1000px;
+    margin: auto;
+}
 
-        h1 {
-            text-align: center;
-            margin-top: 0;
-            letter-spacing: 6px;
-        }
+header {
+    border: 1px solid #00d9ff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 18px;
+    background: #07111b;
+    box-shadow: 0 0 25px rgba(0,217,255,.15);
+}
 
-        .status {
-            text-align: center;
-            color: #7ff3ff;
-            margin-bottom: 20px;
-        }
+h1 {
+    margin: 0;
+    letter-spacing: 5px;
+    font-size: 32px;
+}
 
-        #output {
-            min-height: 180px;
-            padding: 18px;
-            margin-bottom: 15px;
-            background: #03060a;
-            border: 1px solid #164653;
-            border-radius: 12px;
-            line-height: 1.6;
-            overflow-wrap: anywhere;
-        }
+.status {
+    margin-top: 8px;
+    color: #55ff99;
+}
 
-        .row {
-            display: flex;
-            gap: 10px;
-        }
+.clock {
+    font-size: 28px;
+    margin-top: 15px;
+    color: white;
+}
 
-        #question {
-            flex: 1;
-            min-width: 0;
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid #00d9ff;
-            background: #050a10;
-            color: white;
-            font-size: 16px;
-        }
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
 
-        button {
-            padding: 14px 18px;
-            border: 0;
-            border-radius: 10px;
-            background: #00d9ff;
-            color: #001018;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.card {
+    background: #07111b;
+    border: 1px solid #164653;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 18px rgba(0,217,255,.08);
+}
 
-        button:hover {
-            opacity: 0.85;
-        }
+.card h2 {
+    margin-top: 0;
+    font-size: 17px;
+    color: #7ff3ff;
+}
 
-        .mic {
-            width: 100%;
-            margin-top: 12px;
-        }
+.value {
+    font-size: 38px;
+    font-weight: bold;
+    color: white;
+}
 
-        @media (max-width: 500px) {
-            .row {
-                flex-direction: column;
-            }
+.bar {
+    height: 12px;
+    background: #101c26;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 15px;
+}
 
-            button {
-                width: 100%;
-            }
-        }
-    </style>
+.fill {
+    height: 100%;
+    width: 0%;
+    background: #00d9ff;
+    transition: width .5s;
+}
+
+.online {
+    color: #55ff99;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.graph {
+    height: 120px;
+    display: flex;
+    align-items: end;
+    gap: 5px;
+    margin-top: 15px;
+}
+
+.graph span {
+    flex: 1;
+    background: #00d9ff;
+    min-height: 8px;
+    border-radius: 4px 4px 0 0;
+}
+
+@media(max-width:650px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 </head>
 
 <body>
 
-    <div class="jarvis">
+<div class="dashboard">
 
-        <h1>JARVIS</h1>
+<header>
+    <h1>TECH DASHBOARD</h1>
+    <div class="status">● SYSTEM ONLINE</div>
+    <div class="clock" id="clock">00:00:00</div>
+    <div id="date"></div>
+</header>
 
-        <div class="status">
-            SYSTEMS ONLINE
-        </div>
+<div class="grid">
 
-        <div id="output">
-            <b>JARVIS:</b> Good evening. Systems are online.
-        </div>
-
-        <div class="row">
-            <input
-                id="question"
-                placeholder="Ask JARVIS anything..."
-                onkeydown="if(event.key === 'Enter') askJarvis()"
-            >
-
-            <button onclick="askJarvis()">SEND</button>
-        </div>
-
-        <button class="mic" onclick="speakJarvis()">
-            🎙️ TALK TO JARVIS
-        </button>
-
+<div class="card">
+    <h2>CPU USAGE</h2>
+    <div class="value" id="cpu">--%</div>
+    <div class="bar">
+        <div class="fill" id="cpuBar"></div>
     </div>
+</div>
 
-    <script>
+<div class="card">
+    <h2>RAM USAGE</h2>
+    <div class="value" id="ram">--%</div>
+    <div class="bar">
+        <div class="fill" id="ramBar"></div>
+    </div>
+</div>
 
-        async function askJarvis() {
+<div class="card">
+    <h2>BATTERY</h2>
+    <div class="value" id="battery">--%</div>
+    <div class="bar">
+        <div class="fill" id="batteryBar"></div>
+    </div>
+</div>
 
-            const input = document.getElementById("question");
-            const output = document.getElementById("output");
+<div class="card">
+    <h2>INTERNET</h2>
+    <div class="online" id="internet">CHECKING...</div>
+</div>
 
-            const question = input.value.trim();
+<div class="card">
+    <h2>SYSTEM ACTIVITY</h2>
+    <div class="graph" id="graph"></div>
+</div>
 
-            if (!question) return;
+<div class="card">
+    <h2>DEVICE</h2>
+    <div class="value" style="font-size:25px;">
+        ONLINE
+    </div>
+    <p>Dashboard running successfully.</p>
+</div>
 
-            output.innerHTML =
-                "<b>YOU:</b> " + question +
-                "<br><br><b>JARVIS:</b> Thinking...";
+</div>
 
-            input.value = "";
+</div>
 
-            try {
+<script>
 
-                const response = await fetch("https://type-jmdsfe5yf-acme-7bc7.vercel.app/api/chat", {
-                    method: "POST",
+function updateClock() {
+    const now = new Date();
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+    document.getElementById("clock").textContent =
+        now.toLocaleTimeString();
 
-                    body: JSON.stringify({
-                        message: question
-                    })
-                });
+    document.getElementById("date").textContent =
+        now.toLocaleDateString(undefined, {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+}
 
-                const data = await response.json();
+function randomSystemData() {
 
-                if (!response.ok) {
-                    throw new Error(
-                        data.error || "Request failed"
-                    );
-                }
+    const cpu = Math.floor(Math.random() * 70) + 10;
+    const ram = Math.floor(Math.random() * 60) + 25;
 
-                output.innerHTML =
-                    "<b>YOU:</b> " + question +
-                    "<br><br><b>JARVIS:</b> " +
-                    data.reply;
+    document.getElementById("cpu").textContent = cpu + "%";
+    document.getElementById("cpuBar").style.width = cpu + "%";
 
-            } catch (error) {
+    document.getElementById("ram").textContent = ram + "%";
+    document.getElementById("ramBar").style.width = ram + "%";
+}
 
-                output.innerHTML =
-                    "<b>YOU:</b> " + question +
-                    "<br><br><b>JARVIS:</b> " +
-                    "Sorry, I couldn't connect to my AI brain.";
-            }
-        }
+function updateInternet() {
 
+    const online = navigator.onLine;
 
-        function speakJarvis() {
+    document.getElementById("internet").textContent =
+        online ? "ONLINE" : "OFFLINE";
+}
 
-            if (!("speechSynthesis" in window)) {
+async function updateBattery() {
 
-                alert("Voice isn't supported by this browser.");
+    if (!navigator.getBattery) {
+        document.getElementById("battery").textContent = "N/A";
+        return;
+    }
 
-                return;
-            }
+    const battery = await navigator.getBattery();
 
-            const message =
-                "Good evening. I am JARVIS. Your systems are online.";
+    const level = Math.round(battery.level * 100);
 
-            const speech =
-                new SpeechSynthesisUtterance(message);
+    document.getElementById("battery").textContent =
+        level + "%";
 
-            speech.rate = 0.9;
-            speech.pitch = 0.8;
+    document.getElementById("batteryBar").style.width =
+        level + "%";
+}
 
-            speechSynthesis.speak(speech);
-        }
+function createGraph() {
 
-    </script>
+    const graph = document.getElementById("graph");
+
+    graph.innerHTML = "";
+
+    for (let i = 0; i < 18; i++) {
+
+        const bar = document.createElement("span");
+
+        bar.style.height =
+            (Math.floor(Math.random() * 90) + 10) + "%";
+
+        graph.appendChild(bar);
+    }
+}
+
+updateClock();
+randomSystemData();
+updateInternet();
+updateBattery();
+createGraph();
+
+setInterval(updateClock, 1000);
+setInterval(randomSystemData, 2000);
+setInterval(updateInternet, 2000);
+setInterval(createGraph, 1500);
+
+window.addEventListener("online", updateInternet);
+window.addEventListener("offline", updateInternet);
+
+</script>
 
 </body>
 </html>
