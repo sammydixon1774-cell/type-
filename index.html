@@ -13,7 +13,8 @@
 body {
     margin: 0;
     min-height: 100vh;
-    background: #03070d;
+    background:
+        radial-gradient(circle at top, #08233a 0%, #03070d 45%, #010308 100%);
     color: #00d9ff;
     font-family: Arial, sans-serif;
     padding: 20px;
@@ -26,28 +27,37 @@ body {
 
 header {
     border: 1px solid #00d9ff;
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 20px;
+    padding: 25px;
     margin-bottom: 18px;
-    background: #07111b;
-    box-shadow: 0 0 25px rgba(0,217,255,.15);
+    background: rgba(5,15,25,.9);
+    box-shadow:
+        0 0 25px rgba(0,217,255,.2),
+        inset 0 0 25px rgba(0,217,255,.04);
 }
 
 h1 {
     margin: 0;
-    letter-spacing: 5px;
-    font-size: 32px;
+    letter-spacing: 6px;
+    font-size: 34px;
 }
 
 .status {
-    margin-top: 8px;
+    margin-top: 10px;
     color: #55ff99;
+    font-weight: bold;
 }
 
 .clock {
-    font-size: 28px;
-    margin-top: 15px;
+    font-size: 30px;
+    margin-top: 18px;
     color: white;
+    font-weight: bold;
+}
+
+#date {
+    margin-top: 5px;
+    color: #00d9ff;
 }
 
 .grid {
@@ -57,9 +67,9 @@ h1 {
 }
 
 .card {
-    background: #07111b;
+    background: rgba(5,15,25,.9);
     border: 1px solid #164653;
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 20px;
     box-shadow: 0 0 18px rgba(0,217,255,.08);
 }
@@ -70,25 +80,54 @@ h1 {
     color: #7ff3ff;
 }
 
-.value {
-    font-size: 38px;
+.gauges {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+}
+
+.gauge {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #00d9ff 0deg,
+        #00d9ff 180deg,
+        #10222d 180deg,
+        #10222d 360deg
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,217,255,.2);
+}
+
+.gauge::before {
+    content: "";
+    position: absolute;
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    background: #07111b;
+}
+
+.gauge-content {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+}
+
+.gauge-value {
+    font-size: 28px;
     font-weight: bold;
     color: white;
 }
 
-.bar {
-    height: 12px;
-    background: #101c26;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 15px;
-}
-
-.fill {
-    height: 100%;
-    width: 0%;
-    background: #00d9ff;
-    transition: width .5s;
+.gauge-label {
+    font-size: 12px;
+    color: #7ff3ff;
+    margin-top: 5px;
 }
 
 .online {
@@ -98,7 +137,7 @@ h1 {
 }
 
 .graph {
-    height: 120px;
+    height: 130px;
     display: flex;
     align-items: end;
     gap: 5px;
@@ -109,12 +148,28 @@ h1 {
     flex: 1;
     background: #00d9ff;
     min-height: 8px;
-    border-radius: 4px 4px 0 0;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 0 8px rgba(0,217,255,.4);
+    transition: height .5s;
+}
+
+.info {
+    color: white;
+    line-height: 1.8;
 }
 
 @media(max-width:650px) {
     .grid {
         grid-template-columns: 1fr;
+    }
+
+    .gauges {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h1 {
+        font-size: 27px;
     }
 }
 </style>
@@ -134,32 +189,41 @@ h1 {
 <div class="grid">
 
 <div class="card">
-    <h2>CPU USAGE</h2>
-    <div class="value" id="cpu">--%</div>
-    <div class="bar">
-        <div class="fill" id="cpuBar"></div>
-    </div>
-</div>
+    <h2>SYSTEM PERFORMANCE</h2>
 
-<div class="card">
-    <h2>RAM USAGE</h2>
-    <div class="value" id="ram">--%</div>
-    <div class="bar">
-        <div class="fill" id="ramBar"></div>
+    <div class="gauges">
+
+        <div class="gauge" id="cpuGauge">
+            <div class="gauge-content">
+                <div class="gauge-value" id="cpu">--%</div>
+                <div class="gauge-label">CPU</div>
+            </div>
+        </div>
+
+        <div class="gauge" id="ramGauge">
+            <div class="gauge-content">
+                <div class="gauge-value" id="ram">--%</div>
+                <div class="gauge-label">RAM</div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <div class="card">
     <h2>BATTERY</h2>
-    <div class="value" id="battery">--%</div>
-    <div class="bar">
-        <div class="fill" id="batteryBar"></div>
+    <div class="gauge" id="batteryGauge">
+        <div class="gauge-content">
+            <div class="gauge-value" id="battery">--%</div>
+            <div class="gauge-label">POWER</div>
+        </div>
     </div>
 </div>
 
 <div class="card">
     <h2>INTERNET</h2>
     <div class="online" id="internet">CHECKING...</div>
+    <p class="info">Connection status detected by your device.</p>
 </div>
 
 <div class="card">
@@ -169,10 +233,11 @@ h1 {
 
 <div class="card">
     <h2>DEVICE</h2>
-    <div class="value" style="font-size:25px;">
-        ONLINE
+    <div class="info">
+        <b>STATUS:</b> ONLINE<br>
+        <b>MODE:</b> DASHBOARD<br>
+        <b>SYSTEM:</b> ACTIVE
     </div>
-    <p>Dashboard running successfully.</p>
 </div>
 
 </div>
@@ -196,24 +261,37 @@ function updateClock() {
         });
 }
 
+function setGauge(id, value) {
+    const degrees = value * 3.6;
+
+    document.getElementById(id).style.background =
+        `conic-gradient(
+            #00d9ff 0deg,
+            #00d9ff ${degrees}deg,
+            #10222d ${degrees}deg,
+            #10222d 360deg
+        )`;
+}
+
 function randomSystemData() {
 
     const cpu = Math.floor(Math.random() * 70) + 10;
     const ram = Math.floor(Math.random() * 60) + 25;
 
-    document.getElementById("cpu").textContent = cpu + "%";
-    document.getElementById("cpuBar").style.width = cpu + "%";
+    document.getElementById("cpu").textContent =
+        cpu + "%";
 
-    document.getElementById("ram").textContent = ram + "%";
-    document.getElementById("ramBar").style.width = ram + "%";
+    document.getElementById("ram").textContent =
+        ram + "%";
+
+    setGauge("cpuGauge", cpu);
+    setGauge("ramGauge", ram);
 }
 
 function updateInternet() {
 
-    const online = navigator.onLine;
-
     document.getElementById("internet").textContent =
-        online ? "ONLINE" : "OFFLINE";
+        navigator.onLine ? "ONLINE" : "OFFLINE";
 }
 
 async function updateBattery() {
@@ -230,8 +308,7 @@ async function updateBattery() {
     document.getElementById("battery").textContent =
         level + "%";
 
-    document.getElementById("batteryBar").style.width =
-        level + "%";
+    setGauge("batteryGauge", level);
 }
 
 function createGraph() {
@@ -259,8 +336,8 @@ createGraph();
 
 setInterval(updateClock, 1000);
 setInterval(randomSystemData, 2000);
-setInterval(updateInternet, 2000);
 setInterval(createGraph, 1500);
+setInterval(updateInternet, 2000);
 
 window.addEventListener("online", updateInternet);
 window.addEventListener("offline", updateInternet);
